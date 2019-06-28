@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>城市列表</title>
+</head>
+<body>
+	<table border="1">
+		<tr>
+			<td>ID</td>
+			<td>名称</td>
+			<td>简称</td>
+			<td>编号</td>
+			<td>更新</td>
+			<td>删除</td>
+		</tr>
+		<tr th:each="city:${citys}">
+			<td th:text="${city.id}"></td>
+			<td th:text="${city.name}"></td>
+			<td th:text="${city.te}"></td>
+			<td th:text="${city.num}"></td>
+			<td><a th:href="@{/city/findCity(id=${city.id})}">修改</a></td>
+			<td><a th:href="@{/city/deleteCity(id=${city.id})}">删除</a></td>
+		</tr>
+	</table>
+</body>
+</html>

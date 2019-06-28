@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Insert title here</title>
+</head>
+<body>
+	<!-- thymeleaf标签，th:text 代表向页面输出文字 -->
+	<span th:text="Holle"></span>
+	<hr>
+	<span th:text="${msg}"></span>
+	<hr>
+	<!-- thymeleaf标签，th:value 写入input的value中 -->
+	<input type="submit" name="username" th:value="${msg}">
+	<hr>
+	<!-- 判断是否为空 -->
+	<span th:text="${#strings.isEmpty(msg)}"></span>
+	<hr>
+	<!-- 日期格式化操作 -->
+	<span th:text="${#dates.format(date,'yyyy-mm-dd hh:mm:ss')}"></span>
+	<!-- 循环遍历：th:each -->
+	<table border="1">
+		<tr>
+			<th>姓名</th>
+			<th>年龄</th>
+		</tr>
+		<tr th:each="item:${userList}">
+			<td th:text="${item.username}"></td>
+			<td th:text="${item.userage}"></td>
+		</tr>
+	</table>
+	<p>-----------------------操作对象域--------------------------------------------------------------</p>
+	Request:
+	<span th:text="${#httpServletRequest.getAttribute('req')}"></span>
+	<br /> Session:
+	<span th:text="${session.sess}"></span>
+	<br /> Application:
+	<span th:text="${application.app}"></span>
+	<p>-----------------------URL类型--------------------------------------------------------------</p>
+	<a th:href="@{http://www.baidu.com}">绝对路径URL</a>
+	<br />
+	<!-- 会去找可以处理show的资源 -->
+	<a th:href="@{/show}">相对路径</a>
+	<br />
+	<!-- URL传值 -->
+	<a th:href="@{~/show(id=1,name=zhangsan)}">相对路径，URL传值</a><br/>
+</body>
+</html>

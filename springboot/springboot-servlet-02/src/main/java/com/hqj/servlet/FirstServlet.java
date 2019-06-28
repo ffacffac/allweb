@@ -9,24 +9,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *SpringBoot整合Servlet方式一
+ * SpringBoot整合Servlet方式一
  *
- *<servlet>
- *	<servlet-name>FirstServlet</servlet-name>
- *	<servlet-class>com.bjsxt.servlet.FirstServlet</servlet-class>
- *</servlet>
+ * <servlet> <servlet-name>FirstServlet</servlet-name>
+ * <servlet-class>com.bjsxt.servlet.FirstServlet</servlet-class> </servlet>
  *
- *<servlet-mapping>
- * <servlet-name>FirstServlet</servlet-name>
- * <url-pattern>/first</url-pattern>
- *</servlet-mapping>
+ * <servlet-mapping> <servlet-name>FirstServlet</servlet-name>
+ * <url-pattern>/first</url-pattern> </servlet-mapping>
  *
  */
+@WebServlet(name = "FirstServlet", urlPatterns = "/first")
 public class FirstServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		super.doGet(req, resp);
-		System.out.println("启动项："+FirstServlet.class.getName());
+		System.out.println("启动项：" + FirstServlet.class.getName());
 	}
 }

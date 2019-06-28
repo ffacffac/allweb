@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>录入城市信息</title>
+</head>
+<body>
+	<form th:action="@{/city/addCity}" method="post">
+		城市名称：<input type="text" name="name">
+		<font color="red" th:errors="${city.name}"></font>
+		<br/>
+		城市简称：<input type="text"name="te">
+		<font color="red" th:errors="${city.te}"></font>
+		<br /> 
+		城市编码：<input type="number" name="num">
+		<font color="red" th:errors="${city.num}"></font>
+		<br /> 
+		<input type="submit" value="确认">
+	</form>
+</body>
+</html>
