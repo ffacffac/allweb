@@ -9,6 +9,7 @@ import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.hqj.filter.SecondFilter;
 import com.hqj.listener.SecondListener;
@@ -25,6 +26,7 @@ import com.hqj.servlet.SecondServlet;
 //@ServletComponentScan
 @MapperScan("com.hqj.mapper")
 @EnableCaching // 启动缓存
+@EnableScheduling // 开启定时任务
 public class App {
 
 	public static void main(String[] args) {

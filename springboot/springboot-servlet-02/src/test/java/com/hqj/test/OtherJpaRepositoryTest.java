@@ -14,7 +14,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.hqj.App;
@@ -27,6 +32,7 @@ import com.hqj.pojo.JUser;
 import com.hqj.pojo.Menus;
 import com.hqj.pojo.Other;
 import com.hqj.pojo.Roles;
+import com.hqj.pojo.Users;
 import com.hqj.service.impl.CityServiceImpl;
 import com.hqj.service.impl.UserServiceImpl;
 
@@ -207,28 +213,72 @@ public class OtherJpaRepositoryTest {
 	@Test
 	public void testFindMany() {
 		Roles r = this.rolesManyRepository.findOne(7);
-		System.out.println("多对多：角色----"+r.toString());
+		System.out.println("多对多：角色----" + r.toString());
 		Set<Menus> menus = r.gettMenus();
 		for (Menus m : menus) {
-			System.out.println("多对多：角色对应菜单----"+m.toString());
+			System.out.println("多对多：角色对应菜单----" + m.toString());
 		}
 	}
-	
-	
+
 	@Autowired
 	private UserServiceImpl userServiceImpl;
-	
+
 	/**
 	 * 测试ehcache缓存
 	 */
 	@Test
 	public void testChcache() {
-		//ehcache缓存策略，第二次查询从缓存中拿
-		System.out.println(userServiceImpl.findUsersById(1).toString());//查询值
-		System.out.println(userServiceImpl.findUsersById(1).toString());//缓存值
-		System.out.println(userServiceImpl.findUsersById(3).toString());//查询值
-		System.out.println(userServiceImpl.findUsersById(3).toString());//缓存值
-		System.out.println(userServiceImpl.findUsersById(4).toString());//查询值
-		System.out.println(userServiceImpl.findUsersById(3).toString());//缓存值
+		// ehcache缓存策略，第二次查询从缓存中拿
+		System.out.println(userServiceImpl.findUsersById(1).toString());// 查询值
+		System.out.println(userServiceImpl.findUsersById(1).toString());// 缓存值
+		System.out.println(userServiceImpl.findUsersById(3).toString());// 查询值
+		System.out.println(userServiceImpl.findUsersById(3).toString());// 缓存值
+		System.out.println(userServiceImpl.findUsersById(4).toString());// 查询值
+		System.out.println(userServiceImpl.findUsersById(3).toString());// 缓存值
 	}
+
+	/**
+	 * 测试ehcache缓存：@Cacheable
+	 */
+	@Test
+	public void testUsersPage() {
+		Pageable pageable = new PageRequest(0, 2);
+		System.out.println(userServiceImpl.findUsersPage(pageable).getTotalElements());
+		System.out.println(userServiceImpl.findUsersPage(pageable).getTotalElements());
+
+		pageable = new PageRequest(1, 3);
+		System.out.println(userServiceImpl.findUsersPage(pageable).getTotalElements());
+	}
+
+	@Test
+	public void testSaveCount() {
+		/**
+		 * 查询所有记录，然后在插入一条数据，在查询。插入后，最后一次查询还是会获取缓存的size。
+		 * 比如：原来记录size=5，saveUser后，查询到的记录还是size=5，应该是size+1=6才对
+		 * 因此要在saveUsers方法添加@CacheEvict注解
+		 *
+		 */
+		System.out.println(userServiceImpl.findUsersAll().size());
+
+		Users u = new Users();
+		u.setUsername("黄闪1");
+		u.setAddress("广州市天河区");
+		u.setUserage(23);
+
+		userServiceImpl.saveUsers(u);// @CacheEvict注解清除缓存策略，下次查询才能及时更新数据
+
+		// 最后查询
+		System.out.println(userServiceImpl.findUsersAll().size());
+	}
+
+//	@Autowired
+//	private RedisTemplate<String, Object> redisTemplate;
+//
+//	/**
+//	 * 测试redis
+//	 */
+//	@Test
+//	public void testRedisSet() {
+//		redisTemplate.opsForValue().set("name", "张三");
+//	}
 }
